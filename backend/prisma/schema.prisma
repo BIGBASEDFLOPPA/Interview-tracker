@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum InterviewStatus {
+  PLANNED
+  PASSED
+  FAILED
+  FAKE
+}
+
+enum InterviewType {
+  HR
+  TECH
+  LIVE
+  OFFER
+}
+
+enum InterviewEntryType {
+  THEORY
+  LIVE_CODING
+  QUESTION
+  NOTE
+}
+
+enum TheoryCategory {
+  HTML
+  CSS
+  JS_TS
+  FRAMEWORKS
+  ALGORITHMS
+  OTHER
+}
+
+enum TheoryScope {
+  FRONTEND
+  BACKEND
+  FULLSTACK
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+
+  interviews         Interview[]
+  theoryQuestions    TheoryQuestion[]
+  LiveCodingSolution LiveCodingSolution[]
+}
+
+model TheoryQuestion {
+  id        Int            @id @default(autoincrement())
+  question  String
+  answer    String
+  category  TheoryCategory
+  scope     TheoryScope
+  learned   Boolean        @default(false)
+  createdAt DateTime       @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model Interview {
+  id      Int             @id @default(autoincrement())
+  title   String
+  company String
+  date    DateTime
+  status  InterviewStatus
+  type    InterviewType
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  entries InterviewEntry[]
+
+  createdAt DateTime @default(now())
+}
+
+model InterviewEntry {
+  id      Int                @id @default(autoincrement())
+  type    InterviewEntryType
+  content String
+
+  interviewId Int
+  interview   Interview @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
+
+model LiveCodingTask {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  tags        String[]
+  createdAt   DateTime @default(now())
+
+  solutions LiveCodingSolution[]
+}
+
+model LiveCodingSolution {
+  id        Int            @id @default(autoincrement())
+  content   String
+  completed Boolean        @default(false)
+  userId    Int
+  user      User           @relation(fields: [userId], references: [id])
+  taskId    Int
+  task      LiveCodingTask @relation(fields: [taskId], references: [id])
+  createdAt DateTime       @default(now())
+}
