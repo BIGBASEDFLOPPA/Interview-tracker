@@ -22,10 +22,10 @@ build/
 docker-compose.override.yml
 
 # Prisma generated client
-prisma/client/
+**/prisma/client/
 
 # Prisma migrations
-prisma/migrations/
+**/prisma/migrations/
 
 # Optional: VSCode settings
 .vscode/
@@ -35,3 +35,6 @@ prisma/migrations/
 
 # Optional: npm cache
 .npm/
+
+# WebStorm / IntelliJ IDEA
+.idea/
