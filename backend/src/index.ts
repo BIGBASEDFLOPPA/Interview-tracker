@@ -10,12 +10,18 @@ import dashboardRoutes from "./routes/dashboard";
 import theoryRoutes from './routes/theory';
 import livecodingRoutes from './routes/livecoding';
 import {errorMiddleware} from "./middleware/error.middleware";
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
-
 const app = express();
-app.use(cors());
+
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+}));
 app.use(express.json());
+app.use(cookieParser());
+
 
 app.use("/auth", authRouter);
 app.use("/api/users", authMiddleware, usersRouter);
