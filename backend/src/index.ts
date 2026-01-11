@@ -1,14 +1,14 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import authRouter from "./routes/auth";
-import usersRouter from "./routes/users";
-import { authMiddleware } from "./middleware/auth";
-import interviewsRouter from "./routes/interviews";
-import interviewEntriesRouter from "./routes/interviewEntries";
-import dashboardRoutes from "./routes/dashboard";
-import theoryRoutes from './routes/theory';
-import livecodingRoutes from './routes/livecoding';
+import authRouter from "./routes/auth.route";
+import usersRouter from "./routes/users.route";
+import { authMiddleware } from "./middleware/auth.middleware";
+import interviewsRouter from "./routes/interviews.route";
+import interviewEntriesRouter from "./routes/interviewEntries.route";
+import dashboardRoutes from "./routes/dashboard.route";
+import theoryRoutes from './routes/theory.route';
+import livecodingRoutes from './routes/livecoding.route';
 import {errorMiddleware} from "./middleware/error.middleware";
 import cookieParser from 'cookie-parser';
 

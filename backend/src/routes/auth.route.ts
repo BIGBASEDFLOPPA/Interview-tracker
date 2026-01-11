@@ -4,17 +4,15 @@ import { registerSchema, loginSchema } from "../validators/auth.validator";
 
 const router = Router();
 
-// Helper для установки cookie
 const setTokenCookie = (res: any, token: string) => {
     res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
+        maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 };
 
-// POST /auth/register
 router.post("/register", async (req, res) => {
     const parsed = registerSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -35,7 +33,6 @@ router.post("/register", async (req, res) => {
     }
 });
 
-// POST /auth/login
 router.post("/login", async (req, res) => {
     const parsed = loginSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -56,7 +53,6 @@ router.post("/login", async (req, res) => {
     }
 });
 
-// POST /auth/logout
 router.post("/logout", (_req, res) => {
     res.clearCookie("token", {
         httpOnly: true,

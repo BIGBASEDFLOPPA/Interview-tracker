@@ -2,7 +2,8 @@
 import { defineComponent, ref } from 'vue';
 
 import { useRouter } from 'vue-router';
-import {useAuthStore} from "../stores/auth.store";
+import {useAuthStore} from "../stores/useAuthStore";
+
 
 export default defineComponent({
   setup() {

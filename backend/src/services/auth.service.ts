@@ -11,7 +11,6 @@ class AuthService {
                 data: { email, name, password: hashedPassword },
             });
 
-            // Создаём токен сразу после регистрации
             const token = this.generateToken(user.id, user.email);
 
             return {
