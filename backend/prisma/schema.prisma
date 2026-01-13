@@ -22,9 +22,6 @@ enum InterviewType {
 }
 
 enum InterviewEntryType {
-  THEORY
-  LIVE_CODING
-  QUESTION
   NOTE
 }
 
@@ -50,49 +47,46 @@ model User {
   password  String
   createdAt DateTime @default(now())
 
-  interviews         Interview[]
-  theoryQuestions    TheoryQuestion[]
-  LiveCodingSolution LiveCodingSolution[]
+  interviews      Interview[]
+  theoryQuestions TheoryQuestion[]
 }
 
 model TheoryQuestion {
-  id        Int            @id @default(autoincrement())
-  question  String
-  answer    String
-  category  TheoryCategory
-  scope     TheoryScope
-  learned   Boolean        @default(false)
-  createdAt DateTime       @default(now())
-
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+  id          Int            @id @default(autoincrement())
+  question    String
+  answer      String
+  category    TheoryCategory
+  scope       TheoryScope
+  learned     Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+  userId      Int
+  user        User           @relation(fields: [userId], references: [id])
+  interviewId Int?
+  interview   Interview?     @relation(fields: [interviewId], references: [id])
 }
 
 model Interview {
-  id      Int             @id @default(autoincrement())
-  title   String
-  company String
-  date    DateTime
-  status  InterviewStatus
-  type    InterviewType
-
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
-
-  entries InterviewEntry[]
-
-  createdAt DateTime @default(now())
+  id              Int                       @id @default(autoincrement())
+  title           String
+  company         String
+  date            DateTime
+  status          InterviewStatus
+  type            InterviewType
+  userId          Int
+  user            User                      @relation(fields: [userId], references: [id])
+  entries         InterviewEntry[]
+  liveCodingTasks InterviewLiveCodingTask[]
+  createdAt       DateTime                  @default(now())
+  TheoryQuestion  TheoryQuestion[]
 }
 
 model InterviewEntry {
-  id      Int                @id @default(autoincrement())
-  type    InterviewEntryType
-  content String
-
+  id          Int                @id @default(autoincrement())
+  type        InterviewEntryType
+  content     String
   interviewId Int
-  interview   Interview @relation(fields: [interviewId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
+  interview   Interview          @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  createdAt   DateTime           @default(now())
 }
 
 model LiveCodingTask {
@@ -102,16 +96,19 @@ model LiveCodingTask {
   tags        String[]
   createdAt   DateTime @default(now())
 
-  solutions LiveCodingSolution[]
+  interviews InterviewLiveCodingTask[]
 }
 
-model LiveCodingSolution {
-  id        Int            @id @default(autoincrement())
-  content   String
-  completed Boolean        @default(false)
-  userId    Int
-  user      User           @relation(fields: [userId], references: [id])
-  taskId    Int
+model InterviewLiveCodingTask {
+  id          Int      @id @default(autoincrement())
+  interviewId Int
+  taskId      Int
+  solution    String?
+  completed   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  interview Interview      @relation(fields: [interviewId], references: [id], onDelete: Cascade)
   task      LiveCodingTask @relation(fields: [taskId], references: [id])
-  createdAt DateTime       @default(now())
+
+  @@unique([interviewId, taskId])
 }

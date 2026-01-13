@@ -90,7 +90,12 @@ export const interviewService = {
     async getById(id: number, userId: number) {
         return prisma.interview.findFirst({
             where: { id, userId },
-            include: { entries: true }
+            include: {
+                entries: true,
+                liveCodingTasks: {
+                    include: { task: true }
+                }
+            }
         });
     },
 

@@ -38,9 +38,9 @@ export const dashboardService = {
 
         const liveTasksTotal = await prisma.liveCodingTask.count();
 
-        const liveSolved = await prisma.liveCodingSolution.count({
+        const liveSolved = await prisma.interviewLiveCodingTask.count({
             where: {
-                userId,
+                interview: { userId },
                 completed: true
             }
         });
