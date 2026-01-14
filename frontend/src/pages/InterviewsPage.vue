@@ -1,31 +1,35 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { useInterviewsStore } from '../stores/interviews.store';
-import { useRouter } from 'vue-router';
+import { computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useInterviewsStore } from "../stores/interviews.store";
 
-const store = useInterviewsStore();
+import { Interview } from "../types/interview.types";
+import InterviewsList from "../components/interview/InterviewsList.vue";
+
+
+
+const interviewsStore = useInterviewsStore();
 const router = useRouter();
 
+const interviews = computed(() => interviewsStore.interviews);
+
+function goToInterview(interview: Interview) {
+  router.push(`/interviews/${interview.id}`);
+}
+
 onMounted(() => {
-  store.filteredEntries();
+  interviewsStore.loadInterviews();
+
 });
 </script>
 
 <template>
-  <div>
-    <h1>Interviews</h1>
+  <div class="p-4">
+    <h1 class="text-2xl font-bold mb-4">Список интервью</h1>
 
-    <div v-if="store.isLoading">Loading...</div>
-
-    <ul v-else>
-      <li
-          v-for="interview in store.items"
-          :key="interview.id"
-          @click="router.push(`/interviews/${interview.id}`)"
-          style="cursor: pointer"
-      >
-        {{ interview.company }} — {{ interview.title }} ({{ interview.status }})
-      </li>
-    </ul>
+    <InterviewsList
+        :interviews="interviews"
+        @select="goToInterview"
+    />
   </div>
 </template>

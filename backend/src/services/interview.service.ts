@@ -91,7 +91,6 @@ export const interviewService = {
         return prisma.interview.findFirst({
             where: { id, userId },
             include: {
-                entries: true,
                 liveCodingTasks: {
                     include: { task: true }
                 }

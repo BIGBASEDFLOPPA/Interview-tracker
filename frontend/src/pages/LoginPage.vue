@@ -1,33 +1,23 @@
-<script lang="ts">
-import { defineComponent, ref } from 'vue';
+<script setup lang="ts">
+import {defineComponent, ref} from 'vue';
 
-import { useRouter } from 'vue-router';
+import {useRouter} from 'vue-router';
 import {useAuthStore} from "../stores/useAuthStore";
 
 
-export default defineComponent({
-  setup() {
-    const email = ref('');
-    const password = ref('');
-    const auth = useAuthStore();
-    const router = useRouter();
+const email = ref('');
+const password = ref('');
+const auth = useAuthStore();
+const router = useRouter();
 
-    const onSubmit = async () => {
-      await auth.login(email.value, password.value);
-      if (auth.isAuthenticated) {
-        router.push('/dashboard');
-      }
-    };
+const onSubmit = async () => {
+  await auth.login(email.value, password.value);
+  if (auth.isAuthenticated) {
+    router.push('/dashboard');
+  }
+};
 
-    return {
-      email,
-      password,
-      onSubmit,
-      error: auth.error,
-      isLoading: auth.isLoading,
-    };
-  },
-});
+
 </script>
 <template>
   <div class="min-h-screen flex items-center justify-center bg-gray-100">

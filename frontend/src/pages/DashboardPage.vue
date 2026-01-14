@@ -3,7 +3,6 @@ import { onMounted } from 'vue'
 import {useDashboardStore} from "../stores/useDashboardStore";
 
 
-
 const dashboard = useDashboardStore()
 
 onMounted(() => {

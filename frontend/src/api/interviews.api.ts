@@ -1,46 +1,25 @@
-import api from './api';
+import api from "./api";
+import {Interview, InterviewsResponse} from "../types/interview.types";
 
-export interface Interview {
-    id: number;
-    title: string;
-    company: string;
-    date: string;
-    status: string;
-    type: string;
+
+export function fetchInterviews(params?: Record<string, any>) {
+    return api.get<InterviewsResponse>("/api/interviews", {
+        params
+    });
 }
 
-export interface InterviewsResponse {
-    items: Interview[];
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
+export function fetchInterviewById(id: number) {
+    return api.get<Interview>(`/api/interviews/${id}`);
 }
 
-export const interviewsApi = {
-    getAll(params?: Record<string, any>) {
-        return api.get<InterviewsResponse>('/api/interviews', { params });
-    },
+export function createInterview(payload: Partial<Interview>) {
+    return api.post<Interview>("/api/interviews", payload);
+}
 
-    getById(id: number) {
-        return api.get(`/api/interviews/${id}`);
-    },
+export function updateInterview(id: number, payload: Partial<Interview>) {
+    return api.put(`/api/interviews/${id}`, payload);
+}
 
-    create(data: {
-        title: string;
-        company: string;
-        date: string;
-        status: string;
-        type: string;
-    }) {
-        return api.post('/api/interviews', data);
-    },
-
-    update(id: number, data: any) {
-        return api.put(`/api/interviews/${id}`, data);
-    },
-
-    remove(id: number) {
-        return api.delete(`/api/interviews/${id}`);
-    }
-};
+export function deleteInterview(id: number) {
+    return api.delete(`/api/interviews/${id}`);
+}

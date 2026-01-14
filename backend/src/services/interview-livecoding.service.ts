@@ -4,6 +4,9 @@ const prisma = new PrismaClient();
 
 export const interviewLiveCodingService = {
     async addTaskToInterview(userId: number, interviewId: number, taskId: number) {
+        if (!Number.isInteger(interviewId)) throw new Error("Invalid interviewId");
+        if (!Number.isInteger(taskId)) throw new Error("Invalid taskId");
+
         const interview = await prisma.interview.findFirst({
             where: { id: interviewId, userId }
         });
@@ -22,19 +25,27 @@ export const interviewLiveCodingService = {
     },
 
     async getInterviewTasks(userId: number, interviewId: number) {
+        if (!Number.isInteger(interviewId)) throw new Error("Invalid interviewId");
+
         return prisma.interviewLiveCodingTask.findMany({
             where: {
-                interviewId,
-                interview: { userId }
+                interview: {
+                    id: interviewId,
+                    userId
+                }
             },
-            include: {
-                task: true
-            },
+            include: { task: true },
             orderBy: { createdAt: "desc" }
         });
     },
 
-    async updateSolution(userId: number, id: number, data: { solution?: string; completed?: boolean }) {
+    async updateSolution(
+        userId: number,
+        id: number,
+        data: { solution?: string; completed?: boolean }
+    ) {
+        if (!Number.isInteger(id)) throw new Error("Invalid task id");
+
         return prisma.interviewLiveCodingTask.updateMany({
             where: {
                 id,
@@ -45,6 +56,8 @@ export const interviewLiveCodingService = {
     },
 
     async removeTask(userId: number, id: number) {
+        if (!Number.isInteger(id)) throw new Error("Invalid task id");
+
         return prisma.interviewLiveCodingTask.deleteMany({
             where: {
                 id,

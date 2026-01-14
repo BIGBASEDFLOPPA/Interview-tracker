@@ -1,66 +1,79 @@
-import { defineStore } from 'pinia';
-import { interviewsApi } from '../api/interviews.api';
-import { interviewEntriesApi } from '../api/interviewEntries.api';
+import { defineStore } from "pinia";
+import { ref } from "vue";
+import type { Interview } from "../types/interview.types";
+import {
+    fetchInterviews,
+    fetchInterviewById,
+    createInterview,
+    updateInterview,
+    deleteInterview
+} from "../api/interviews.api";
 
-export const useInterviewsStore = defineStore('interviews', {
-    state: () => ({
-        items: [] as any[],
-        currentInterview: null as any,
-        isLoading: false,
-        error: null as string | null,
-        entriesFilter: 'ALL' as string,
-    }),
+export const useInterviewsStore = defineStore("interviews", () => {
+    const interviews = ref<Interview[]>([]);
+    const currentInterview = ref<Interview | null>(null);
+    const isLoading = ref(false);
+    const error = ref<string | null>(null);
 
-    getters: {
-        filteredEntries(state) {
-            if (!state.currentInterview) return [];
+    async function loadInterviews() {
+        isLoading.value = true;
+        error.value = null;
 
-            if (state.entriesFilter === 'ALL') {
-                return state.currentInterview.entries;
-            }
-
-            return state.currentInterview.entries.filter(
-                (e: any) => e.type === state.entriesFilter
-            );
-        }
-    },
-
-    actions: {
-        async fetchInterviewById(id: number) {
-            this.isLoading = true;
-            try {
-                const { data } = await interviewsApi.getById(id);
-                this.currentInterview = data;
-            } catch {
-                this.error = 'Interview not found';
-            } finally {
-                this.isLoading = false;
-            }
-        },
-
-        async addEntry(type: string, content: string) {
-            if (!this.currentInterview) return;
-
-            const interviewId = this.currentInterview.id;
-
-            const { data } = await interviewEntriesApi.add(interviewId, {
-                type,
-                content,
-            });
-
-            this.currentInterview.entries.push(data);
-        },
-
-        async removeEntry(entryId: number) {
-            await interviewEntriesApi.remove(entryId);
-
-            this.currentInterview.entries = this.currentInterview.entries.filter(
-                (e: any) => e.id !== entryId
-            );
-        },
-
-        setEntriesFilter(type: string) {
-            this.entriesFilter = type;
+        try {
+            const { data } = await fetchInterviews();
+            interviews.value = data.items;
+        } catch (e: any) {
+            error.value = e?.message || "Failed to load interviews";
+        } finally {
+            isLoading.value = false;
         }
     }
+
+    async function loadInterviewById(id: number) {
+        isLoading.value = true;
+        error.value = null;
+
+        try {
+            const { data } = await fetchInterviewById(id);
+            currentInterview.value = data;
+        } catch (e: any) {
+            error.value = e?.message || "Failed to load interview";
+        } finally {
+            isLoading.value = false;
+        }
+    }
+
+    async function addInterview(payload: Partial<Interview>) {
+        const { data } = await createInterview(payload);
+        interviews.value.unshift(data);
+    }
+
+    async function editInterview(id: number, payload: Partial<Interview>) {
+        await updateInterview(id, payload);
+
+        const index = interviews.value.findIndex(i => i.id === id);
+        if (index !== -1) {
+            interviews.value[index] = {
+                ...interviews.value[index],
+                ...payload
+            };
+        }
+    }
+
+    async function removeInterview(id: number) {
+        await deleteInterview(id);
+        interviews.value = interviews.value.filter(i => i.id !== id);
+    }
+
+    return {
+        interviews,
+        currentInterview,
+        isLoading,
+        error,
+        loadInterviews,
+        loadInterviewById,
+        addInterview,
+        editInterview,
+        removeInterview
+    };
 });

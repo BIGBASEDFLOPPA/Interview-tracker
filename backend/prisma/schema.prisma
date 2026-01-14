@@ -21,10 +21,6 @@ enum InterviewType {
   OFFER
 }
 
-enum InterviewEntryType {
-  NOTE
-}
-
 enum TheoryCategory {
   HTML
   CSS
@@ -74,19 +70,9 @@ model Interview {
   type            InterviewType
   userId          Int
   user            User                      @relation(fields: [userId], references: [id])
-  entries         InterviewEntry[]
   liveCodingTasks InterviewLiveCodingTask[]
   createdAt       DateTime                  @default(now())
   TheoryQuestion  TheoryQuestion[]
-}
-
-model InterviewEntry {
-  id          Int                @id @default(autoincrement())
-  type        InterviewEntryType
-  content     String
-  interviewId Int
-  interview   Interview          @relation(fields: [interviewId], references: [id], onDelete: Cascade)
-  createdAt   DateTime           @default(now())
 }
 
 model LiveCodingTask {

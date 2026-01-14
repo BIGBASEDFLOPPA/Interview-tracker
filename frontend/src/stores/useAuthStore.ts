@@ -1,4 +1,3 @@
-// src/stores/auth.store.ts
 import { defineStore } from 'pinia'
 import {authApi} from "../api/auth.api";
 import api from "../api/api";

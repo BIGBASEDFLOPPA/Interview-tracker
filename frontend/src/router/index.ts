@@ -1,40 +1,35 @@
-import {createRouter, createWebHistory} from 'vue-router';
-
+import { createRouter, createWebHistory } from 'vue-router';
+import { useAuthStore } from "../stores/useAuthStore";
 import LoginPage from "../pages/LoginPage.vue";
-import {useAuthStore} from "../stores/useAuthStore";
-import InterviewDetailsPage from "../pages/InterviewDetailsPage.vue";
 import InterviewsPage from "../pages/InterviewsPage.vue";
+import InterviewDetailsPage from "../pages/InterviewDetailsPage.vue";
 
 const routes = [
-    {
-        path: '/',
-        redirect: () => {
-            const authStore = useAuthStore()
-            return authStore.isAuthenticated ? '/dashboard' : '/login'
-        }
-    },
-    {
-        path: '/login',
-        component: LoginPage
-    },
-    {
-        path: '/dashboard',
-        component: () => import('../pages/DashboardPage.vue')
-    },
-    {path: '/interviews', component: InterviewsPage},
-    {path: '/interviews/:id', component: InterviewDetailsPage},
+    { path: '/', redirect: '/interviews' },
+    { path: '/login', component: LoginPage, meta: { guestOnly: true } },
+    { path: '/interviews', component: InterviewsPage, meta: { requiresAuth: true } },
+    { path: '/interviews/:id', component: InterviewDetailsPage, meta: { requiresAuth: true } },
 ];
 
 const router = createRouter({
     history: createWebHistory(),
-    routes,
+    routes
 });
 
-router.beforeEach((to, _from, next) => {
+let authInitPromise: Promise<void> | null = null;
+
+router.beforeEach(async (to, _from, next) => {
     const auth = useAuthStore();
+
+    if (!authInitPromise) {
+        authInitPromise = auth.fetchCurrentUser().catch(() => {});
+    }
+    await authInitPromise;
 
     if (to.meta.requiresAuth && !auth.isAuthenticated) {
         next('/login');
+    } else if (to.meta.guestOnly && auth.isAuthenticated) {
+        next('/interviews');
     } else {
         next();
     }
