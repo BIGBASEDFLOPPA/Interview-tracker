@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useInterviewsStore } from "../stores/interviews.store";
-
-import { Interview } from "../types/interview.types";
 import InterviewsList from "../components/interview/InterviewsList.vue";
-
+import {useInterviewsStore} from "../stores/interviews.store";
+import {Interview} from "../types/interview.types";
 
 
 const interviewsStore = useInterviewsStore();
@@ -14,12 +12,11 @@ const router = useRouter();
 const interviews = computed(() => interviewsStore.interviews);
 
 function goToInterview(interview: Interview) {
-  router.push(`/interviews/${interview.id}`);
+  router.push(`/interviews/${interview.id}/theory`);
 }
 
 onMounted(() => {
   interviewsStore.loadInterviews();
-
 });
 </script>
 

@@ -15,7 +15,7 @@ const router = useRouter();
 const onSubmit = async () => {
   await auth.register(email.value, password.value, name.value);
   if (auth.isAuthenticated) {
-    router.push('/dashboard');
+    router.push('/interviews');
   }
 };
 

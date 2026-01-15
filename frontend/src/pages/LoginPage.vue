@@ -13,7 +13,7 @@ const router = useRouter();
 const onSubmit = async () => {
   await auth.login(email.value, password.value);
   if (auth.isAuthenticated) {
-    router.push('/dashboard');
+    router.push('/interviews');
   }
 };
 

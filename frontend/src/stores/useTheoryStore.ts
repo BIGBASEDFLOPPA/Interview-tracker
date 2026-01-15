@@ -13,7 +13,6 @@ export const useTheoryStore = defineStore("theory", () => {
     async function loadTheory(params?: Record<string, any>) {
         isLoading.value = true;
         error.value = null;
-
         try {
             const { data } = await fetchTheory(params);
             items.value = data.items;

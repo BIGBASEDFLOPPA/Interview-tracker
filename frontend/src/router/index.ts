@@ -2,13 +2,33 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from "../stores/useAuthStore";
 import LoginPage from "../pages/LoginPage.vue";
 import InterviewsPage from "../pages/InterviewsPage.vue";
-import InterviewDetailsPage from "../pages/InterviewDetailsPage.vue";
 
 const routes = [
     { path: '/', redirect: '/interviews' },
     { path: '/login', component: LoginPage, meta: { guestOnly: true } },
-    { path: '/interviews', component: InterviewsPage, meta: { requiresAuth: true } },
-    { path: '/interviews/:id', component: InterviewDetailsPage, meta: { requiresAuth: true } },
+    { path: '/interviews', component: InterviewsPage, name: 'interviews', meta: { requiresAuth: true } },
+    {
+        path: '/interviews/:id',
+        component: () => import('../layouts/InterviewLayout.vue'),
+        meta: { requiresAuth: true },
+        children: [
+            {
+                path: '',
+                redirect: 'theory'
+            },
+            {
+                path: 'theory',
+                component: () => import('../pages/InterviewTheoryPage.vue'),
+                meta: { showBackToInterviews: true },
+            },
+            {
+                path: 'livecoding',
+                component: () => import('../pages/InterviewLiveCodingPage.vue'),
+                meta: { showBackToInterviews: true },
+            }
+        ]
+    },
+
 ];
 
 const router = createRouter({

@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import {Theory} from "../../../types/theory.types";
-
-
-
+import { Theory } from "../../../types/theory.types";
+import BtnBase from "../../ui/BtnBase.vue";
 
 const props = defineProps<{
   item: Theory;
@@ -24,7 +22,7 @@ watch(
 function save() {
   emit("update", {
     id: props.item.id,
-    learned: learned.value
+    learned: learned.value,
   });
 }
 
@@ -32,6 +30,7 @@ function removeItem() {
   emit("remove", props.item.id);
 }
 </script>
+
 <template>
   <div class="border p-4 rounded shadow flex flex-col md:flex-row md:justify-between">
     <div>
@@ -47,14 +46,12 @@ function removeItem() {
         <input type="checkbox" v-model="learned" />
         Изучено
       </label>
-
-      <button class="bg-blue-500 text-white px-3 py-1 rounded" @click="save">
+      <BtnBase @click="save">
         Сохранить
-      </button>
-
-      <button class="bg-red-500 text-white px-3 py-1 rounded" @click="removeItem">
+      </BtnBase>
+      <BtnBase variant="danger" @click="removeItem">
         Удалить
-      </button>
+      </BtnBase>
     </div>
   </div>
 </template>
