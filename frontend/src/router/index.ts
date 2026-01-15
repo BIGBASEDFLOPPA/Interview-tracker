@@ -1,11 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from "../stores/useAuthStore";
-import LoginPage from "../pages/LoginPage.vue";
 import InterviewsPage from "../pages/InterviewsPage.vue";
+import AuthPage from "../pages/AuthPage.vue";
 
 const routes = [
     { path: '/', redirect: '/interviews' },
-    { path: '/login', component: LoginPage, meta: { guestOnly: true } },
+    { path: '/auth', component: AuthPage,  meta: { hideHeader: true }   },
     { path: '/interviews', component: InterviewsPage, name: 'interviews', meta: { requiresAuth: true } },
     {
         path: '/interviews/:id',
@@ -47,7 +47,7 @@ router.beforeEach(async (to, _from, next) => {
     await authInitPromise;
 
     if (to.meta.requiresAuth && !auth.isAuthenticated) {
-        next('/login');
+        next('/auth');
     } else if (to.meta.guestOnly && auth.isAuthenticated) {
         next('/interviews');
     } else {
