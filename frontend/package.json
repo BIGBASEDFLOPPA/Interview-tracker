@@ -13,6 +13,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@guolao/vue-monaco-editor": "1.6.0",
     "@tailwindcss/vite": "^4.1.18",
     "axios": "^1.13.2",
     "dayjs": "^1.11.19",

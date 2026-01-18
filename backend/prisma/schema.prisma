@@ -62,39 +62,39 @@ model TheoryQuestion {
 }
 
 model Interview {
-  id              Int                       @id @default(autoincrement())
-  title           String
-  company         String
-  date            DateTime
-  status          InterviewStatus
-  type            InterviewType
-  userId          Int
-  user            User                      @relation(fields: [userId], references: [id])
-  liveCodingTasks InterviewLiveCodingTask[]
-  createdAt       DateTime                  @default(now())
-  TheoryQuestion  TheoryQuestion[]
+  id             Int                   @id @default(autoincrement())
+  title          String
+  company        String
+  date           DateTime
+  status         InterviewStatus
+  type           InterviewType
+  userId         Int
+  user           User                  @relation(fields: [userId], references: [id])
+  codingTasks    InterviewCodingTask[]
+  createdAt      DateTime              @default(now())
+  TheoryQuestion TheoryQuestion[]
 }
 
-model LiveCodingTask {
+model CodingTaskTemplate {
   id          Int      @id @default(autoincrement())
   title       String
   description String
   tags        String[]
   createdAt   DateTime @default(now())
 
-  interviews InterviewLiveCodingTask[]
+  interviewTasks InterviewCodingTask[]
 }
 
-model InterviewLiveCodingTask {
+model InterviewCodingTask {
   id          Int      @id @default(autoincrement())
   interviewId Int
-  taskId      Int
+  templateId  Int
   solution    String?
   completed   Boolean  @default(false)
   createdAt   DateTime @default(now())
 
-  interview Interview      @relation(fields: [interviewId], references: [id], onDelete: Cascade)
-  task      LiveCodingTask @relation(fields: [taskId], references: [id])
+  interview Interview          @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  template  CodingTaskTemplate @relation(fields: [templateId], references: [id])
 
-  @@unique([interviewId, taskId])
+  @@unique([interviewId, templateId])
 }

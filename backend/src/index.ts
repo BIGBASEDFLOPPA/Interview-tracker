@@ -9,7 +9,7 @@ import dashboardRoutes from "./routes/dashboard.route";
 import theoryRoutes from './routes/theory.route';
 import {errorMiddleware} from "./middleware/error.middleware";
 import cookieParser from 'cookie-parser';
-import interviewLivecodingRoute from "./routes/interview-livecoding.route";
+import codingTaskRoute from "./routes/coding-task.route";
 
 dotenv.config();
 const app = express();
@@ -25,7 +25,7 @@ app.use(cookieParser());
 app.use("/auth", authRouter);
 app.use("/api/users", authMiddleware, usersRouter);
 app.use("/api/interviews", authMiddleware, interviewsRouter);
-app.use("/api/interview-livecoding",authMiddleware,interviewLivecodingRoute)
+app.use("/api/interview-coding",authMiddleware,codingTaskRoute);
 app.use('/api/dashboard', authMiddleware, dashboardRoutes);
 app.use('/api/theory', authMiddleware, theoryRoutes);
 app.use(errorMiddleware);

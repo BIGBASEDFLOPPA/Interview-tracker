@@ -23,7 +23,7 @@ const routes = [
             },
             {
                 path: 'livecoding',
-                component: () => import('../pages/InterviewLiveCodingPage.vue'),
+                component: () => import('../pages/InterviewCodingPage.vue'),
                 meta: { showBackToInterviews: true },
             }
         ]

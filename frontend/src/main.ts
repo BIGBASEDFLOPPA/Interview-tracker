@@ -1,13 +1,22 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
-import './assets/styles/global.css'
 import App from "./App.vue";
-
-
-import "./assets/tailwind.css";
 import router from "./router";
 
-createApp(App)
-    .use(createPinia())
-    .use(router)
-    .mount("#app");
+import "./assets/styles/global.css";
+import "./assets/tailwind.css";
+
+import { install as VueMonacoEditorPlugin } from "@guolao/vue-monaco-editor";
+
+const app = createApp(App);
+
+app.use(createPinia());
+app.use(router);
+
+app.use(VueMonacoEditorPlugin, {
+    paths: {
+        vs: "https://cdn.jsdelivr.net/npm/monaco-editor@0.54.0/min/vs"
+    }
+});
+
+app.mount("#app");
