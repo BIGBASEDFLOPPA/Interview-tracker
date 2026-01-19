@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineProps, defineEmits, computed } from 'vue';
 import FormInput from './FormInput.vue';
+import BtnBase from "../ui/BtnBase.vue";
 
 const props = defineProps<{
   fields?: string[];
@@ -35,13 +36,13 @@ const isRegister = computed(() => props.fields?.includes('name'));
 
     <div v-if="props.error" class="text-red-400 text-sm font-medium animate-pulse">{{ props.error }}</div>
 
-    <button
+    <BtnBase
         type="submit"
         :disabled="props.isLoading"
         class="w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500
              transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed shadow-md"
     >
       {{ props.isLoading ? (isRegister ? 'Registering...' : 'Logging in...') : (isRegister ? 'Register' : 'Login') }}
-    </button>
+    </BtnBase>
   </form>
 </template>

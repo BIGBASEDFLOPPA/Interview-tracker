@@ -1,6 +1,7 @@
 import { Router } from "express";
 import authService from "../services/auth.service";
 import { registerSchema, loginSchema } from "../validators/auth.validator";
+import { validate } from "../middleware/validate.middleware";
 
 const router = Router();
 
@@ -13,45 +14,41 @@ const setTokenCookie = (res: any, token: string) => {
     });
 };
 
-router.post("/register", async (req, res) => {
-    const parsed = registerSchema.safeParse(req.body);
-    if (!parsed.success) {
-        return res.status(400).json({
-            message: "Validation error",
-            errors: parsed.error.format(),
-        });
+router.post(
+    "/register",
+    validate(registerSchema),
+    async (req, res, next) => {
+        try {
+            const { email, password, name } = req.body;
+            const { user, token } = await authService.register(email, password, name);
+            setTokenCookie(res, token);
+            res.json({ user });
+        } catch (err: any) {
+            if (err.message === "EMAIL_EXISTS") {
+                return res.status(400).json({ message: "Email already exists" });
+            }
+            next(err);
+        }
     }
+);
 
-    const { email, password, name } = parsed.data;
-
-    try {
-        const { user, token } = await authService.register(email, password, name);
-        setTokenCookie(res, token);
-        res.json({ message: "Registered successfully", user });
-    } catch {
-        res.status(400).json({ message: "Email already exists" });
+router.post(
+    "/login",
+    validate(loginSchema),
+    async (req, res, next) => {
+        try {
+            const { email, password } = req.body;
+            const { token } = await authService.login(email, password);
+            setTokenCookie(res, token);
+            res.json({ message: "Logged in successfully" });
+        } catch (err: any) {
+            if (err.message === "INVALID_CREDENTIALS") {
+                return res.status(401).json({ message: "Invalid email or password" });
+            }
+            next(err);
+        }
     }
-});
-
-router.post("/login", async (req, res) => {
-    const parsed = loginSchema.safeParse(req.body);
-    if (!parsed.success) {
-        return res.status(400).json({
-            message: "Validation error",
-            errors: parsed.error.format(),
-        });
-    }
-
-    const { email, password } = parsed.data;
-
-    try {
-        const { token } = await authService.login(email, password);
-        setTokenCookie(res, token);
-        res.json({ message: "Logged in successfully" });
-    } catch {
-        res.status(401).json({ message: "Invalid email or password" });
-    }
-});
+);
 
 router.post("/logout", (_req, res) => {
     res.clearCookie("token", {

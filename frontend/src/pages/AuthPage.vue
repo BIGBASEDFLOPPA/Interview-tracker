@@ -33,7 +33,7 @@ async function onSubmit() {
     }
     if (auth.isAuthenticated) router.push('/interviews');
   } catch (e: any) {
-    error.value = e?.message ?? 'Something went wrong';
+    error.value = e?.message ?? 'error';
   } finally {
     isLoading.value = false;
   }

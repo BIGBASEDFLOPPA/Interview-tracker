@@ -70,10 +70,12 @@ export const useAuthStore = defineStore('auth', {
 
         async logout() {
             this.isLoading = true
+            this.logoutLocal()
+
             try {
                 await authApi.logout()
+            } catch {
             } finally {
-                this.logoutLocal()
                 this.isLoading = false
             }
         },

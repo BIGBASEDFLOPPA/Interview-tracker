@@ -74,7 +74,7 @@ export function runInSandbox(
             if (finished) return;
             finished = true;
             cleanup();
-            resolve("❌ Превышено время выполнения (возможен бесконечный цикл)");
+            resolve("Превышено время выполнения (возможен бесконечный цикл)");
         }, timeoutMs);
 
         document.body.appendChild(iframe);
@@ -93,7 +93,7 @@ export function runInSandbox(
               "*"
             );
           } catch (e) {
-            parent.postMessage("❌ " + e.message, "*");
+            parent.postMessage("Ошибка " + e.message, "*");
           }
         }, 0);
       <\/script>

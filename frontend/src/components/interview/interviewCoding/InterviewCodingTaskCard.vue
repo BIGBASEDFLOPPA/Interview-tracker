@@ -30,7 +30,7 @@ async function remove() {
       <button @click="remove">Удалить</button>
     </div>
 
-    <small v-if="task.completed">✅ Решено</small>
+    <small v-if="task.completed">Решено</small>
   </div>
 </template>
 
