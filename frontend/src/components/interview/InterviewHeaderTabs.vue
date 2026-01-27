@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import {useInterviewsStore} from "../stores/interviews.store";
+import {useInterviewsStore} from "../../stores/interviews.store";
 
 
 const route = useRoute();

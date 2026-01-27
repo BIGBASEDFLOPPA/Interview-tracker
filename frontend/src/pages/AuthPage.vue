@@ -2,10 +2,10 @@
 import {onMounted, ref} from 'vue';
 import { useAuthStore } from '../stores/useAuthStore';
 import { useRouter } from 'vue-router';
-import BackgroundStars from "../layouts/BackgroundStars.vue";
+import BackgroundStars from "../components/ui/BackgroundStars.vue";
 import AuthTabs from "../components/auth/AuthTabs.vue";
 import AuthForm from "../components/auth/AuthForm.vue";
-import BackgroundVideo from "../layouts/BackgroundVideo.vue";
+import BackgroundVideo from "../components/ui/BackgroundVideo.vue";
 
 const activeTab = ref<'login' | 'register'>('login');
 const auth = useAuthStore();

@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import AddTheoryItem from "../components/interview/interviewTheory/AddTheoryItem.vue";
 import TheoryList from "../components/interview/interviewTheory/TheoryList.vue";
 import { useTheoryStore } from "../stores/useTheoryStore";
+import InterviewHeaderTabs from "../components/interview/InterviewHeaderTabs.vue";
 
 const route = useRoute();
 const interviewId = Number(route.params.id);
@@ -28,6 +29,7 @@ function handleRemove(id: number) {
 </script>
 
 <template>
+  <InterviewHeaderTabs :interview="interviewId" />
   <AddTheoryItem
       :interview-id="interviewId"
       @theory-added="loadTheories"
